@@ -5,3 +5,5 @@ export * from "./token-traded";
 export * from "./vote-casted";
 export * from "./start-sentiment-poll";
 export * from "./end-sentiment-poll";
+export * from "./start-kalshi-market";
+export * from "./end-kalshi-market";

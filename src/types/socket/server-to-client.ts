@@ -88,6 +88,20 @@ export type UpdatePollNotificationEvent = {
   };
 };
 
+export type KalshiMarketStartedEvent = {
+  id: string; // ID stored in the database
+  brandId: string;
+  kalshiUrl: string;
+  kalshiEventId: string;
+  position: PopupPositions;
+  durationMs: number; // Duration in milliseconds
+};
+
+export type KalshiMarketEndedEvent = {
+  id: string;
+  brandId: string;
+};
+
 export type ServerToClientEvents = {
   [ServerToClientSocketEvents.STREAM_JOINED]: StreamJoinedEvent;
   [ServerToClientSocketEvents.ERROR]: ErrorEvent;
@@ -97,5 +111,7 @@ export type ServerToClientEvents = {
   [ServerToClientSocketEvents.START_SENTIMENT_POLL]: PollNotificationEvent;
   [ServerToClientSocketEvents.END_SENTIMENT_POLL]: EndPollNotificationEvent;
   [ServerToClientSocketEvents.UPDATE_SENTIMENT_POLL]: UpdatePollNotificationEvent;
+  [ServerToClientSocketEvents.KALSHI_MARKET_STARTED]: KalshiMarketStartedEvent;
+  [ServerToClientSocketEvents.KALSHI_MARKET_ENDED]: KalshiMarketEndedEvent;
   [ServerToClientSocketEvents.ERROR]: ErrorEvent;
 };
