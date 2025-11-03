@@ -69,6 +69,21 @@ export type UpdateSentimentPollEvent = {
   votes: number;
   results: { bullPercent: number; bearPercent: number };
 };
+
+export type StartKalshiMarketEvent = {
+  id: string; // ID stored in the database
+  brandId: string;
+  kalshiUrl: string;
+  kalshiEventId: string;
+  position: PopupPositions;
+  durationMs: number; // Duration in milliseconds
+};
+
+export type EndKalshiMarketEvent = {
+  id: string;
+  brandId: string;
+};
+
 export type ClientToServerEvents = {
   [ClientToServerSocketEvents.JOIN_STREAM]: JoinStreamEvent;
   [ClientToServerSocketEvents.TIP_SENT]: TipSentEvent;
@@ -77,4 +92,6 @@ export type ClientToServerEvents = {
   [ClientToServerSocketEvents.START_SENTIMENT_POLL]: StartSentimentPollEvent;
   [ClientToServerSocketEvents.END_SENTIMENT_POLL]: EndSentimentPollEvent;
   [ClientToServerSocketEvents.UPDATE_SENTIMENT_POLL]: UpdateSentimentPollEvent;
+  [ClientToServerSocketEvents.START_KALSHI_MARKET]: StartKalshiMarketEvent;
+  [ClientToServerSocketEvents.END_KALSHI_MARKET]: EndKalshiMarketEvent;
 };

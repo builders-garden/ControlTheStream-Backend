@@ -7,6 +7,8 @@ export enum ClientToServerSocketEvents {
   START_SENTIMENT_POLL = "start_sentiment_poll",
   END_SENTIMENT_POLL = "end_sentiment_poll",
   UPDATE_SENTIMENT_POLL = "update_sentiment_poll",
+  START_KALSHI_MARKET = "start_kalshi_market",
+  END_KALSHI_MARKET = "end_kalshi_market",
 }
 
 // server to client
@@ -18,6 +20,8 @@ export enum ServerToClientSocketEvents {
   START_SENTIMENT_POLL = "start_sentiment_poll",
   END_SENTIMENT_POLL = "end_sentiment_poll",
   UPDATE_SENTIMENT_POLL = "update_sentiment_poll",
+  KALSHI_MARKET_STARTED = "kalshi_market_started",
+  KALSHI_MARKET_ENDED = "kalshi_market_ended",
   ERROR = "error",
 }
 

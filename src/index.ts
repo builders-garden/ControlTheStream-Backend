@@ -14,6 +14,8 @@ import {
   VoteCastedHandler,
   StartSentimentPollHandler,
   EndSentimentPollHandler,
+  StartKalshiMarketHandler,
+  EndKalshiMarketHandler,
 } from "./handlers";
 import { baseOrigins, localOrigins } from "./lib/cors";
 import { setIOInstance } from "./lib/socket";
@@ -23,6 +25,8 @@ import type {
   EndSentimentPollEvent,
   JoinStreamEvent,
   StartSentimentPollEvent,
+  StartKalshiMarketEvent,
+  EndKalshiMarketEvent,
   TipSentEvent,
   TokenTradedEvent,
   UpdateSentimentPollEvent,
@@ -166,6 +170,24 @@ io.on("connection", (socket) => {
     }
   );
 
+  socket.on(
+    ClientToServerSocketEvents.START_KALSHI_MARKET,
+    async (data: StartKalshiMarketEvent) => {
+      console.log("8. START_KALSHI_MARKET", data);
+      const handler = new StartKalshiMarketHandler(socket, io);
+      await handler.handle(data);
+    }
+  );
+
+  socket.on(
+    ClientToServerSocketEvents.END_KALSHI_MARKET,
+    async (data: EndKalshiMarketEvent) => {
+      console.log("9. END_KALSHI_MARKET", data);
+      const handler = new EndKalshiMarketHandler(socket, io);
+      await handler.handle(data);
+    }
+  );
+
   // disconnect
   socket.on("disconnect", async () => {
     console.log("user disconnected:", socket.id);
@@ -179,7 +201,7 @@ app.get("/health", (_req, res) => {
 
 // Current time endpoint
 app.get("/current-time", (_req, res) => {
-  res.json({ 
+  res.json({
     timestamp: Date.now(),
   });
 });
