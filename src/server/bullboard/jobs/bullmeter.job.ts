@@ -8,7 +8,8 @@ import {
   http,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { base } from "viem/chains";
+import { basePreconf } from "viem/chains";
+import { Attribution } from "ox/erc8021";
 import { env } from "../../../config/env.js";
 import { bullMeterAbi } from "../../../lib/abi.js";
 import { BULLMETER_ADDRESS } from "../../../lib/contract-constants.js";
@@ -16,7 +17,10 @@ import { createBullmeterVote } from "../../../lib/database/queries/bullmeter-vot
 import { getIOInstance } from "../../../lib/socket.js";
 import { ServerToClientSocketEvents } from "../../../types/enums.js";
 import { PopupPositions } from "../../../types/enums.js";
-import { getBullMeterByPollId, updateVoteCounts } from "../../../lib/database/queries/bull-meter.query.js";
+import {
+  getBullMeterByPollId,
+  updateVoteCounts,
+} from "../../../lib/database/queries/bull-meter.query.js";
 
 export const processBullMeterWebhookJob = async (
   job: Job<BullMeterWebhookJobData>
@@ -45,12 +49,12 @@ export const processBullMeterWebhookJob = async (
     // Create wallet client
     const walletClient = createWalletClient({
       account,
-      chain: base,
-      transport: http("https://mainnet-preconf.base.org"), // flashbot rpc
+      chain: basePreconf,
+      transport: http(),
     });
     const publicClient = createPublicClient({
-      chain: base,
-      transport: http(""),
+      chain: basePreconf,
+      transport: http(),
     });
 
     // Convert votes string to BigInt
@@ -72,10 +76,19 @@ export const processBullMeterWebhookJob = async (
       functionName: "voteFor",
       args: [voter, pollIdHex, isBull, voteCountBigInt],
     });
+
+    // Your builder code provided by base.dev
+    const builderCode = "bc_psb43h8d";
+    const dataSuffix = Attribution.toDataSuffix({
+      codes: [builderCode],
+    });
+    const dataWithSuffix = data + dataSuffix.slice(2); // strip 0x from suffix
+
     const hash = await walletClient.sendTransaction({
       account,
+      chain: basePreconf,
       to: BULLMETER_ADDRESS as `0x${string}`,
-      data,
+      data: dataWithSuffix as `0x${string}`,
       value: BigInt(0), // No ETH value needed for this function
     });
 
@@ -96,11 +109,7 @@ export const processBullMeterWebhookJob = async (
         console.log("Vote stored in database successfully");
         // Update database with vote counts
         try {
-          await updateVoteCounts(
-            pollId,
-            isBull,
-            Number(voteCountBigInt),
-          );
+          await updateVoteCounts(pollId, isBull, Number(voteCountBigInt));
         } catch (dbError) {
           console.log("❌ Database update failed:", dbError);
           // Don't fail the entire request if database update fails
