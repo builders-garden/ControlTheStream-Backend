@@ -9,11 +9,8 @@ export class StartSentimentPollHandler extends SocketHandler {
   async handle({
     id,
     brandId,
-    //username,
-    //profilePicture,
     pollQuestion,
     endTimeMs,
-    //guests,
     results,
   }: StartSentimentPollEvent) {
     try {

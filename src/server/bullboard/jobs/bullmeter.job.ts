@@ -180,7 +180,6 @@ export const processBullMeterWebhookJob = async (
         }
       } catch (dbError) {
         console.log("Database error:", dbError);
-        //TODO: Handle better this error
       }
     }
 
